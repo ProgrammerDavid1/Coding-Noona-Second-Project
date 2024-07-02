@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo 리스트</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- container는 부트스트랩이 제공하는 기본 클래스 -->
+    <div class="container">
+        <h1>Todo 리스트</h1>
+        <div class="input-area">
+            <!-- 나 처음에 task-input id를 div class=input-area 옆에다가 위치시켜놨었음.. 주의할것 -->
+            <input type="text" id="task-input"/> 
+            <button id="add-button">+</button>
+        </div>
+        <br>
+
+        <div class="task-area">
+            <!-- task-area에서 첫번째 칸은 tab이 들어갈거고 tab 밑에는 할일들이 들어갈거고 -->
+             <!-- tab들 밑에다가 indicator 즉 밑줄을 그리고 싶다! -->
+            <div class="task-tabs"> 
+                <div id="under-line"></div>
+                <div>
+                    All
+                </div>
+                <div>
+                    not Done
+                </div>
+                <div>
+                    Done
+                </div>
+            </div>
+
+
+            <!-- 여기서부터는 tab이 아니고 task 할일들 적어놓는 div -->
+             <!-- 이거 잘봐봐. 밑에 div class=task부터 delete 밑에밑에 /div까지 한묶으로 보면
+             이게 여러개 있으면 버튼(체크와 딜리트)과 할일들이 줄마다 생기는거지 이해했지?
+             그래서 div class=task 위에, 즉 부모 태그에 id값(task-board)을 줘서 이 밑에 묶음들을 
+             배열에 추가할거야. 그래서 배열에 꺼내서 바로바로 추가하면 버튼과 공간이 생길 수 있게 -->
+            <div id="task-board">
+            <!-- 할일과 버튼을 가로로 두기 위해서 부모 태그에 class 만들어주기 -->
+                <div class="task">
+                    <div>
+                        다이소 가기
+                    </div>
+                    <!-- 버튼을 만들기 위해서 버튼도 div로 묶어줄게요 -->
+                    <div>
+                        <button>Check</button>
+                        <button>Delete</button>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+</body>
+</html>
+
+<!-- 반응형 웹에 딱 맞는 가운데 박스(컨테이너)를 만들어줄려면 부트스트랩의 컨테이너 이용하는게 좋다!!
+가져온 부트스트랩 css 링크를 내 스타일 css 위에 넣어야함 -->
+<!-- 자바스크립트 링크도 부트스트랩에서 가져오기 -->
