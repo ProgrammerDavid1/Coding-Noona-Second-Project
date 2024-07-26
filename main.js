@@ -19,7 +19,6 @@ let taskInput=document.getElementById("task-input"); //할일들 입력
 let addButton=document.getElementById("add-button"); //+버튼 가져오기
 let underLine=document.getElementById("under-line"); //밑줄 가져오기
 let taskList=[]; //할일들을 이 배열에다가 추가하기 위해서!
-<<<<<<< HEAD
 addButton.addEventListener("click",function(event){
     if(taskInput.value!=""){ //빈 문자열이 아니여야 클릭했을 때 할일이 추가됨.
         addTask(); 
@@ -49,14 +48,7 @@ let mode= "all"
 let stillGoingList=[];
 let DoneList=[];
 let list=[];
-=======
-addButton.addEventListener("click",addTask); //+버튼 클릭하면, addTask함수가 실행
-taskInput.addEventListener("keydown",function(event){ //엔터키를 누르면, addTask()함수가 실행
-    if(event.key=="Enter"){
-        addTask();
-    }
-});
->>>>>>> 9c707d6d2b11ca34c2de678b32d410b55084da2b
+
 
 //어? 근데 그럼 이제 1. 을 하기 위해 check버튼에 addEVentListener해서 click 이벤트를 줘야 하는데
 //html에 없고 자바스크립트에서 반복문 안에 check 버튼이 있네? -> 그럼 버튼에 바로 onclick 이벤트 주기!
