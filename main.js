@@ -179,8 +179,8 @@ function deleteTask(id){ //배열 안에 데이터를 삭제해주면 되겠지?
         }
     }
 
-   //현재 모드에 따라 리스트 업데이트
-    if(mode=="stillGoing"){
+   //현재 모드에 따라 리스트 업데이트. 여기서부터
+    if(mode=="stillGoing"){ 
         for(let i=0;i<stillGoingList.length;i++){
             if(stillGoingList[i].id==id){
                 stillGoingList.splice(i,1);
@@ -194,7 +194,7 @@ function deleteTask(id){ //배열 안에 데이터를 삭제해주면 되겠지?
                 break;
             }
         }
-    }
+    }   //여기까지 굉장히 고민을 많이 하고 너무 힘들었음... 이 부분이 not Done과 Done 탭에서도 삭제했을 때 all에 바로 반영될 수 있게 해주는 코드
 
     drawTaskList(); //불러줘야 실행이 되지!!
 }
