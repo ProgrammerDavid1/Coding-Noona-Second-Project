@@ -1,10 +1,9 @@
 body{
-    /* body 기본 속성이 margin 8px이라서 애매해서 항상 0px로 죽여주기 */
-    margin: 0px; 
+    margin: 0px;  /* body 기본 속성이 margin 8px이라서 애매해서 항상 0px로 죽여주기 */
     background-image: url(background.avif);
     /* 배경 반복되는거 1개만 딱! */
     background-repeat: no-repeat; 
-    /* 1개가 웹사이트 전체를 다 cover해주면 좋겠을때 */
+    /* 배경 1개가 웹사이트 전체를 다 cover해주면 좋겠을때 */
     background-size: cover; 
 }
 
@@ -19,15 +18,20 @@ body{
 .task-tabs{
     /* UI의 기본속성이 세로이기 때문에 div를 만들면 all, not Done, Done이 모두 세로로 들어감
     가로로 바꾸려면 1. display:flex를 써줘야 한다. 2. 근데 이거를 누구한테? flex는 부모한테 적용해야 한다! */
+    /* flex-direction: column; 이렇게 해도 가로를 세로로 바꿀 수 있음. 기둥으로 바꾸겠다 */
     display: flex; 
     /* 똑같이 복사해서 task-tabs에도 적용 가능, 밑에다가 줄 좀 그리자*/
     border-bottom: 1px solid lightgray;
     position: relative;
+    /* align-items: center; 이거는 왼쪽 끝에 있는 것들을 가운데로 가져오기 */
 }
+
 
 .task-tabs div{
     /* task-tabs 밑의 div에다가 공간을 줌 벌리고 싶다. padding으로 1em정도 준다 */
     padding: 1em;
+    cursor: pointer; 
+    /* 커서를 i 모양에서 클릭 버튼 느낌으로 바꾸기~ */
 }
 
 .task-area{
@@ -45,17 +49,22 @@ body{
     /* 절대값으로 주면 이렇게 width나 왼쪽, 오른쪽 이렇게 지정해줄 수 있음 */
     /* position: relative;를 under-line의 부모인 task-tabs에 줘야, absolute의 기준점이 task-tabs가 됨 */
     position: absolute;
+    /* width: 넓이 */
     width: 60px;
+    /* 왼쪽에서부터 0px 떨어뜨려 놓고 */
     left: 0px;
+    /* 위에서부터 52px정도 떨어뜨려 놓고 */
     top: 52px; 
     /* div 태그에 기본 padding 값들이 있는데, 일단 0px로 세팅 */
     padding:0px;
+    transition: 0.5s;
+    /* under line이 부드럽~게 넘어가기 위함 */
 }
 
 .task{
     display: flex;
-    /* 이제 할일은 왼쪽에, 버튼들은 오른쪽 끝에 있어야 함. 사이를 벌려놔야해. 사이에 간격을 쫘아악~ */
-    justify-content: space-between;
+    /* 이제 할일은 왼쪽에, 버튼들은 오른쪽 끝에 있어야 함. 사이를 벌려놔야해. 사이에 간격을 쫘아악~ , 만약에 중간에 놔두고 싶으면 center~로 하면되지유*/
+    justify-content: space-between; 
     /* 이제부터는 짜잘짜잘한 스타일 */
     padding: 1em;
 }

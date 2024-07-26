@@ -17,8 +17,37 @@
 
 let taskInput=document.getElementById("task-input"); //할일들 입력
 let addButton=document.getElementById("add-button"); //+버튼 가져오기
+let underLine=document.getElementById("under-line"); //밑줄 가져오기
 let taskList=[]; //할일들을 이 배열에다가 추가하기 위해서!
-addButton.addEventListener("click",addTask); //+버튼 클릭하면, addTask함수가 실행
+addButton.addEventListener("click",function(event){
+    if(taskInput.value!=""){ //빈 문자열이 아니여야 클릭했을 때 할일이 추가됨.
+        addTask(); 
+    }
+}); //+버튼 클릭하면, addTask함수가 실행
+taskInput.addEventListener("keydown",function(event){ //엔터키를 누르면, addTask()함수가 실행
+    if(taskInput.value!= "" && event.key =="Enter"){ //입력창의 내용이 빈 문자열이거나 아무것도 적혀잇지 않으면 addTask() 안함.
+        //입력창의 내용이 ""게 아니고 엔터키가 눌려야 addTask()가 된다.
+        addTask();
+    }
+});
+let taskTabs = document.querySelectorAll(".task-tabs div"); //querySeletorAll은 괄호 안에 만족하는
+//조건을 모두 가져온다. 한마디로 task-tabs의 클래스의 div 태그들을 모두 가져온다 즉,
+// All not Done Done을 가져오기 위함.
+
+
+//아이템이 여러 개인 관계로 for문으로 사용
+for(let i=1;i<taskTabs.length;i++){ //1부터 시작하는 이유는 console.log로 taskTabs를 확인해봤을 때 i가 0일때는 <div id=under line></div>을 가리키고 있었는데, 나는 이거는 필요없고
+    //All not Done Done만 있으면 되거든.
+    taskTabs[i].addEventListener("click",function(event){
+        filter(event); //click되면 filter(event)를 실행
+        underLineIndicator(event); //underLineIndicator(event)를 실행
+    });
+}
+
+let mode= "all"
+let stillGoingList=[];
+let DoneList=[];
+let list=[];
 
 //어? 근데 그럼 이제 1. 을 하기 위해 check버튼에 addEVentListener해서 click 이벤트를 줘야 하는데
 //html에 없고 자바스크립트에서 반복문 안에 check 버튼이 있네? -> 그럼 버튼에 바로 onclick 이벤트 주기!
@@ -33,45 +62,74 @@ function addTask(){  //할일들이 추가된다
         isComplete: false, //끝났나? 의 초기값! 
     };//추가 정보가 필요 = 객체.  
     taskList.push(task); //inputValue를 배열에 추가가 원래였지만, 이제부터는 task(객체)를 push 해준다
+    taskInput.value=""; //할일을 입력후 클릭이나 엔터키를 누르면 바로 입력창이 비워지게함.
     console.log(taskList); // 좋아 이제 남은거는 배열에 추가된 할일들을 화면에 그리기만 하면 끝나!
     drawTaskList(); 
 } 
 
 //그리기 위해서 할일들을 화면에 그려주는 새 함수를 만들어줄게
 function drawTaskList(){
-    let showResultInHtml = ''; //먼저 공백으로 초기화시켜주고
+    //1. 내가 선택한 탭에 따라서
+    list=[];
+    if (mode=="all"){
+        //all이면 taskList
+        list=taskList;
+    }
+    else if(mode=="stillGoing"){
+        //stillGoing과 done이면 stillGoingList
+        list=stillGoingList; //처음에 stillGoingList는 filter함수내에서만 사용할 수 잇는 지역변수였는데, 전역변수로 선언함으로써 여기서도 사용 가능하지.
+    }
+    else if(mode=="done"){
+        list=DoneList;  
+    }
+    //2. 리스트를 달리 보여준다.
 
-    for(let i=0;i<taskList.length;i++){ //taskList 배열 안의 아이템(할일)들을 하나하나 꺼내서
+    //3. all을 클릭하면 taskList를 보여주고
+    //4. not Done이나 Done을 누르면 stillGoingList를 보여줘야겠지.
+    // -> 위에서 상황별로 list에다가 taskList인지 stillGoingList인지 나눴으니까 
+    //이제 밑에 for문과 모든 코드에서 taskList가 아니라 list로 바꿔주면 되겠지. 
+
+    //예에~~~ ㅎㅎ 이렇게 다 했으니까 not Done은 완료~~ ㅎㅎ 잘했어. 
+    //이제 Done도 한번 해봅시다.
+    
+    //다 완료~~ 
+
+
+    let showResultInHtml = ""; //먼저 공백으로 초기화시켜주고
+
+    for(let i=0;i<list.length;i++){ //taskList 배열 안의 아이템(할일)들을 하나하나 꺼내서
         //원래는 inputValue가 string이었으니까 taskList[i]로 해줬으면 됐는데 이제는 객체라서, 뒤에 .taskValue만을 붙여서 할일들의 value만을 출력하는거지!
         // 그럼 이제 value들은 잘 추가가 되는데, 원하는거는 check 버튼을 누르면 isComplete가 true로 바뀌고, true로 바뀐 아이템에는 찍! 줄이 그어지게 !
-        if(taskList[i].isComplete==true){
+        if(list[i].isComplete==true){
             //isComplete가 true면 taskValue에다가 찌익 그려줄건데, 그러기 위해 div에 class를 주고 css에서 처리
-            showResultInHtml = showResultInHtml+ `<div class="finish-task">
-            <div class="done-task"> 
-                ${taskList[i].taskValue}  
-            </div>
+            showResultInHtml = showResultInHtml+
+            `<div class="finish-task">
+                <div class="done-task"> 
+                ${list[i].taskValue}  
+                </div>
             <!-- 버튼을 만들기 위해서 버튼도 div로 묶어줄게요 -->
             <div>
-                <button onclick= "changeToTrue('${taskList[i].id}')">
+                <button onclick= "changeToTrue('${list[i].id}')">
                 <img src="되돌리기 아이콘.jpg" alt="check" width="20" height="20">
                 </button>
-                <button onclick ="deleteTask('${taskList[i].id}')">
+                <button onclick ="deleteTask('${list[i].id}')">
                 <img src="휴지통 아이콘.jpg" alt="check" width="20" height="20">
                 </button>
             </div>
         </div>`;
-        }else{
+        }
+        else{
             //random id를 생성했으니까 changeToTrue 함수를 실행할 때 파라미터로 id값을 줄 수 있게 되고 이제 구별할 수 있게 되지!
         showResultInHtml = showResultInHtml+ `<div class="task">
         <div>
-            ${taskList[i].taskValue}  
+            ${list[i].taskValue}  
         </div>
         <!-- 버튼을 만들기 위해서 버튼도 div로 묶어줄게요 -->
         <div>
-            <button onclick= "changeToTrue('${taskList[i].id}')">
+            <button onclick= "changeToTrue('${list[i].id}')">
             <img src="체크 아이콘.png" alt="check" width="20" height="20">
             </button>
-            <button onclick="deleteTask('${taskList[i].id}')">
+            <button onclick="deleteTask('${list[i].id}')">
             <img src="휴지통 아이콘.jpg" alt="check" width="20" height="20">
             </button>
         </div>
@@ -112,12 +170,31 @@ function changeToTrue(id){
 }
 
 function deleteTask(id){ //배열 안에 데이터를 삭제해주면 되겠지? 어떻게? splice!!
+    
     for(let i=0;i<taskList.length;i++){
         if(taskList[i].id==id){
             taskList.splice(i,1); //i번째 요소를 삭제해주기! 1개만!
             break;
         }
     }
+
+   //현재 모드에 따라 리스트 업데이트
+    if(mode=="stillGoing"){
+        for(let i=0;i<stillGoingList.length;i++){
+            if(stillGoingList[i].id==id){
+                stillGoingList.splice(i,1);
+                break;
+            }
+        }
+    }else if(mode=="done"){
+        for(let i=0;i<DoneList.length;i++){
+            if(DoneList[i].id==id){
+                DoneList.splice(i,1);
+                break;
+            }
+        }
+    }
+
     drawTaskList(); //불러줘야 실행이 되지!!
 }
 
@@ -126,3 +203,55 @@ function randomIdGenerate(){
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 
+function filter(event){
+    console.log("filter",event.target.id);
+    mode = event.target.id; //event.target.id를 계속 쓰기 길고, 번거러워서 mode 변수 하나 만들어줌.
+    //바로 위에 console.log("filter") 클릭하니까 filter가 잘 출력이 됐는데, 이제 중요한거는 
+    //다 filter로만 뜨니까 이제 얘가 내가 어떤 tabTask을 클릭했는지 알아야할거 아니야. All을 클릭했는지
+    //not Done을 클릭했는지 -> 그래서 각각의 tab들에 id값을 주도록 합시다.
+    //target을 하면 내가 클릭했는게 무엇인지 알수 있지. 근데 target의 id값만 들고 오면 되니까. target.id
+
+    stillGoingList=[]; //진행중인 할일들을 담을 리스트
+    DoneList=[];
+
+    if(mode=="all"){ //만약 all이면 전체 리스트를 보여준다
+        drawTaskList(); //기존에 하던거 그냥 하면 되지.
+    }
+    else if(mode=="stillGoing"){ //아직 완료되지 않은 해야할 리스트를 보여준다.task.isComplete=false인 값들이 진행중인 아이템.
+        for(let i=0;i<taskList.length;i++){ //할일 배열을 돌면서 
+            if(taskList[i].isComplete==false){ //만약 할일 배열의 완료 여부가 false(미완료)이면
+                stillGoingList.push(taskList[i]); //새로운 진행중 배열에 넣어주기
+            }
+        }
+        drawTaskList(); //지금 console.log(stillGoingList)를 했을 때 잘 반영이 됐는지 ui도 반영해주려고 drawTaskList()를 해줬지만 안돼.
+        //왜 그럴까? drawTaskList를 보면 for문이 어디를 돌고 있어? 오직 taskList만 돌고 있잖아. 우리는 앞으로 해야할 할일들은 stillGoingList에 넣었으니까
+        //애가 당연히 반영 안하는거는 당연하지. 그럼 우리는 drawTaskList 함수를 조금 바꿔줘야해. 어떻게?
+        //drawTaskList()함수로 가서 봅시다.
+
+        //자 근데 보시오. 1.을 하기 위해 내가 선택한 탭은 filter에서 누가 들고 있어? 그렇지 mode가 event.target.id로 들고 있지. 그러니까 우리는 
+        //mode를 지역변수로 선언하면 안되고 전역변수로 선언해줘야지. 위에 39번줄에 선언해줬어. 일단 초기값을 all로.
+    }
+    else if(mode=="done"){ //끝난 리스트를 보여준다. task.isComplete가 true인 값들
+        for(let i=0;i<taskList.length;i++){
+            if(taskList[i].isComplete==true){
+                DoneList.push(taskList[i]);
+            }
+        }
+        drawTaskList();
+    }
+}
+
+function underLineIndicator(event){
+    //먼저 under-line의 id를 underLine 변수로 가져오고, 클릭했을 때 발생시키니까 addEventListener()로 클릭 이벤트 발생시켜 주고.
+    //underLine의 자바스크립트에서 css를 다루니까 .style로 하고, .left를 
+    //현재 보면 event.currentTarget.offsetLeft+"px"로 해놨는데
+    //event는 매개변수고, currentTarget은 현재 타킷을 타킷팅하는거고
+    //offset이 중요한데, offsetLeft하면 왼쪽 끝에서부터 목표점까지의 x좌표를 말하는거. 즉 목표점의 제일 왼쪽의 x좌표를 말하는거.
+    //offsetWidth은 목표점의 가로를 말하는거. 즉 제일 왼쪽부터 제일 오른쪽까지의 넓이.
+    //offsetTop은 목표점의 맨 위를 말하는거. 즉 제일 위쪽부터 목표점까지의 길이. 즉 목표점까지의 세로 길이를 말하는거니까 y좌표를 말하는거.
+
+    underLine.style.left=event.currentTarget.offsetLeft+"px"; //목표점의 x좌표가 되는거지. 
+    underLine.style.width=event.currentTarget.offsetWidth+"px"; //목표점의 넓이.
+    underLine.style.top= event.currentTarget.offsetTop+event.currentTarget.offsetHeight+"px"; //목표점의 y좌표가 되는거지. 위에서부터 목표점까지 길이 + 목표점의 높이를 더해야
+    //목표점의 맨 밑에 도달할 수 있으니까.
+}
